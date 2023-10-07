@@ -1,0 +1,55 @@
+{
+  "$schema": "https://www.krakend.io/schema/krakend.json",
+  "version": 3,
+  "name": "KrakenD - API Gateway",
+  "timeout": "30000ms",
+  "cache_ttl": "300s",
+  "output_encoding": "no-op",
+  "disable_compression": false,
+  "extra_config": {
+    "router": {
+      "return_error_msg": true
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/api/posts",
+      "method": "GET",
+      "output_encoding": "fast-json",
+      "input_headers": ["*"],
+      "input_query_strings": ["_limit"],
+      "backend": [
+        {
+          "url_pattern": "/posts",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": ["https://jsonplaceholder.typicode.com"],
+          "disable_host_sanitize": false,
+          "is_collection": true,
+          "target": "",
+          "group": "",
+          "mapping": {}
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/worklogs",
+      "method": "GET",
+      "output_encoding": "fast-json",
+      "input_headers": ["*"],
+      "input_query_strings": ["limit"],
+      "backend": [
+        {
+          "url_pattern": "/api/v2/worklogs",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": ["https://worklog.attendancekeeper.net"],
+          "disable_host_sanitize": false
+        }
+      ]
+    }
+  ],
+  "disable_rest": true
+}
